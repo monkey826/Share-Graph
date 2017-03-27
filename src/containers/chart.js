@@ -1,14 +1,17 @@
 import React from 'react';
 import {
-    View
+    Text, WebView, View
 } from 'react-native';
 
-import Highchart from '../components/Highchart';
 
-export class Chart extends React.Component{ 
-    render(){
-        return(
-            <Highchart />
-        )
-    }
-}
+
+const Chart = () => (
+    <View>
+        <WebView
+            source={{ uri: 'https://github.com/facebook/react-native' }}
+            style={{ marginTop: 40 }}
+            
+        />
+    </View>
+)
+export default Chart;

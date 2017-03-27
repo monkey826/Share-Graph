@@ -1,14 +1,11 @@
-import React from 'react';
-import {
-    View
-} from 'react-native';
+import React, {Component} from 'react';
+import {Text} from 'react-native'
 
-import Highchart from '../components/Highchart';
 
-export class Compare extends React.Component{ 
+export default class Compare extends Component{ 
     render(){
         return(
-            <Highchart />
+           <Text> Hello </Text>
         )
     }
 }
