@@ -8,13 +8,14 @@
   },
   "dependencies": {
     "highcharts": "^5.0.9",
-    "native-base": "^2.0.13",
+    "native-base": "^2.1.0",
     "react": "15.4.2",
     "react-native": "0.42.3",
-    "redux": "^3.6.0",
-    "react-redux" : "5.0.3"
+    "react-redux": "^5.0.3",
+    "redux": "^3.6.0"
   },
   "devDependencies": {
+    "@types/react-native": "^0.42.12",
     "babel-jest": "19.0.0",
     "babel-preset-react-native": "1.9.1",
     "jest": "19.0.2",

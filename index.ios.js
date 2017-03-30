@@ -9,20 +9,44 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  NavigatorIOS
 } from 'react-native';
 
 import App from './src/components/app';
 
-class ShareGraph extends Component {
-  render() {
+export default class ShareGraph extends Component {
+  // _handleNavigationRequest() {
+  //   this.refs.nav.push({
+  //     component: App,
+  //     title: 'Genius',
+  //     passProps: { myProp: 'genius' },
+  //   });
+  // }
+  /*render() {
     return (
-      <View style={styles.container}>
-        <App />
-      </View>
+      <NavigatorIOS
+        ref='nav' 
+        initialRoute={{
+          component: App,
+          title: 'Uponor',
+          passProps: {nav : this.refs.nav},
+          leftButtonTitle: 'Menu',
+          onLeftButtonPress: () => this._handleNavigationRequest(),
+          rightButtonTitle: 'Add',
+          onRightButtonPress: () => this._handleNavigationRequest(),
+        }}
+        
+        style={{flex: 1}}
+        barTintColor='#ffffcc'
+      />
     );
+  }*/
+  render(){
+    return(
+      <App />
+    )
   }
-  
 }
 
 const styles = StyleSheet.create({
@@ -32,7 +56,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
 });
 
 AppRegistry.registerComponent('ShareGraph', () => ShareGraph);
