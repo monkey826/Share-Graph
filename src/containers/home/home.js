@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity,Dimensions, ListView } from 'react-native';
-
+import {connect} from 'react-redux'
 import ModuleButton from './module-button';
 
 // const TYPE_MODULES = [{}]
@@ -58,7 +58,7 @@ const LIST_MODULES = [
 
 const appFooter = "Footer";
 
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     console.log(props);
@@ -67,6 +67,12 @@ export default class Home extends Component {
       dataSource: ds.cloneWithRows(LIST_MODULES),
     };
   }
+  componentOnReceiveProps(){
+    console.log(this.props)
+  }
+  componentDidChange(){
+    console.log(this.props)
+  }
   render() {
     return (
       <View style = {styles.footer}>
@@ -74,16 +80,22 @@ export default class Home extends Component {
           Tap on the modules for more information. {"\n"}
           Use the menu to see all modules.
         </Text>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={(rowData) =>  <ModuleButton name= {rowData.name} /> }
-          contentContainerStyle={styles.cardListModule}
-          style = {{paddingTop :0, marginTop: 0}}
-        />
+        <View style = {styles.cardListModule}>
+          {
+            LIST_MODULES.map((module) => <ModuleButton key = {module.index} name= {module.name} />)
+          }
+        </View>
         <Text style={styles.irappFooter}>
           {appFooter}
         </Text>
       </View>
+      // {
+      //   <Menu />
+      // }
     )
   }
 }
+function mapStateToProps({isMenuOpened }){
+  return {isMenuOpened};
+}
+export default connect(mapStateToProps)(Home);

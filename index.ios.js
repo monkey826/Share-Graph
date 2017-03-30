@@ -12,9 +12,12 @@ import {
   View,
   NavigatorIOS
 } from 'react-native';
-
+import {Provider} from 'react-redux';
+import {createStore, applyMiddleware} from 'redux';
+import ReduxPromise from 'redux-promise';
+import reducers from './src/reducers';
 import App from './src/components/app';
-
+const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 export default class ShareGraph extends Component {
   // _handleNavigationRequest() {
   //   this.refs.nav.push({
@@ -44,7 +47,9 @@ export default class ShareGraph extends Component {
   }*/
   render(){
     return(
-      <App />
+      <Provider store = {createStoreWithMiddleware(reducers)} >
+        <App />
+      </Provider>
     )
   }
 }

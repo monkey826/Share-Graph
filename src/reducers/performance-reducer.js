@@ -1,4 +1,4 @@
-import { FETCH_PERFORMANCE } from '../actions/index';
+import { FETCH_PERFORMANCE } from '../actions/action-type';
 
 export default function(state = [],action){
     switch(action.type){

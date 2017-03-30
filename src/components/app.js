@@ -9,6 +9,9 @@ import {
 // import { Container, Tab, Tabs, Header } from 'native-base';
 import Home from '../containers/home/home';
 import Menu from '../containers/menu';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {handleMenu} from '../actions/app-action'
 // import Chart from '../containers/chart';
 // import Performance from '../containers/performance';
 
@@ -40,8 +43,17 @@ class App extends React.Component{
   //     passProps: { myProp: 'genius' },
   //   });
   // }
-  _openLeftMenu(){
-    alert("Open left menu");
+  constructor(){
+    super();
+    this.state = ({
+      isMenuOpened : false
+    })
+  }
+  _controlLeftMenu(event){
+    // alert("Open left menu");
+    event.preventDefault();
+    this.state.isOpenMenu = !this.state.isMenuOpened;
+    this.props.handleMenu(this.state.isMenuOpened);
   }
   _share() {
     Share.share({
@@ -66,9 +78,9 @@ class App extends React.Component{
         initialRoute={{
           component: Home,
           title: 'Uponor',
-          passProps: {nav : this.refs.nav},
+          passProps: {nav : this.refs.nav },
           leftButtonTitle: 'Menu',
-          onLeftButtonPress: () => this._openLeftMenu(),
+          onLeftButtonPress: (event) => this._controlLeftMenu(event),
           rightButtonTitle: 'Share',
           onRightButtonPress: () => this._share(),
         }}
@@ -79,5 +91,7 @@ class App extends React.Component{
     );
   }
 }
-
-export default App;
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({handleMenu},dispatch);
+}
+export default connect(null,mapDispatchToProps)(App);
