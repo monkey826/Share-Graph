@@ -3,7 +3,6 @@ import { TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native'
 
 const widthDimension = Dimensions.get('window').width;
 
-
 const styles = StyleSheet.create({
   moduleButton: {
     borderWidth: 1,
@@ -27,7 +26,9 @@ class ModuleButton extends React.Component {
   }
   _openModule(){
     console.log(this.props)
-    alert("Open module " + this.props.name)
+    // this.props.navigation.push({
+    //   component : ShareGraph
+    // })
   }
   render() {
     return (

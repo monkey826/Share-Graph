@@ -4,38 +4,23 @@ import {
   Text,
   View,
   NavigatorIOS,
-  Share
+  Share,
+  Dimensions
 } from 'react-native';
 // import { Container, Tab, Tabs, Header } from 'native-base';
 import Home from '../containers/home/home';
-import Menu from '../containers/menu';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {handleMenu} from '../actions/app-action'
-// import Chart from '../containers/chart';
-// import Performance from '../containers/performance';
+
+const styles = StyleSheet.create({
+  openLeftMenu: {
+    transform: [
+      { translateX: Dimensions.get('window').width * 0.7 },
+      { scale: 0.7 },
+    ],
 
 
-/*const App = (props) => {
-  console.log(props);
-  
-  return (
-
-    <Container>
-      <Tabs >
-        <Tab heading="Left Menu" >
-          <Menu  />
-        </Tab>
-        <Tab heading="Uponor" >
-          <Home nav={props.navigator} />
-        </Tab>
-        
-      </Tabs>
-    </Container>
-  )
-}*/
-
-class App extends React.Component{
+  },
+})
+class App extends React.Component {
   // _handleNavigationRequest() {
   //   this.refs.nav.push({
   //     component: Menu,
@@ -43,17 +28,19 @@ class App extends React.Component{
   //     passProps: { myProp: 'genius' },
   //   });
   // }
-  constructor(){
+  constructor() {
     super();
     this.state = ({
-      isMenuOpened : false
+      isMenuOpened: false
     })
   }
-  _controlLeftMenu(event){
+  _controlLeftMenu(event) {
     // alert("Open left menu");
     event.preventDefault();
-    this.state.isOpenMenu = !this.state.isMenuOpened;
-    this.props.handleMenu(this.state.isMenuOpened);
+    this.setState(prevState => ({
+      isMenuOpened: !prevState.isMenuOpened 
+    }));
+    // this.props.handleMenu(this.state.isMenuOpened);
   }
   _share() {
     Share.share({
@@ -61,37 +48,37 @@ class App extends React.Component{
       url: 'http://facebook.github.io/react-native/',
       title: 'React Native'
     }, {
-      dialogTitle: 'Share React Native website',
-      excludedActivityTypes: [
-        // 'com.apple.UIKit.activity.PostToTwitter'
-      ],
-      tintColor: 'green'
-    })
-    .then(this._showResult)
-    .catch((error) => this.setState({result: 'error: ' + error.message}));
+        dialogTitle: 'Share React Native website',
+        excludedActivityTypes: [
+          // 'com.apple.UIKit.activity.PostToTwitter'
+        ],
+        tintColor: 'green'
+      })
+      .then(this._showResult)
+      .catch((error) => this.setState({ result: 'error: ' + error.message }));
   }
-  
+  openHome(){
+    // this.state.isMenuOpened = false
+  }
   render() {
     return (
       <NavigatorIOS
-        ref='nav' 
+        ref='nav'
         initialRoute={{
           component: Home,
           title: 'Uponor',
-          passProps: {nav : this.refs.nav },
+          passProps: { nav: this.refs.nav, isMenuOpened: this.state.isMenuOpened },
           leftButtonTitle: 'Menu',
           onLeftButtonPress: (event) => this._controlLeftMenu(event),
           rightButtonTitle: 'Share',
           onRightButtonPress: () => this._share(),
         }}
-        
-        style={{flex: 1}}
+        onClick = {() => this.openHome()}
+        style={[{ flex: 1 }, this.state.isMenuOpened && styles.openLeftMenu]}
         barTintColor='#ffffcc'
       />
     );
   }
 }
-function mapDispatchToProps(dispatch){
-  return bindActionCreators({handleMenu},dispatch);
-}
-export default connect(null,mapDispatchToProps)(App);
+
+export default App;

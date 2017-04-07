@@ -7,6 +7,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "eslint-plugin-react-native": "^2.3.1",
     "highcharts": "^5.0.9",
     "native-base": "^2.1.0",
     "react": "15.4.2",
