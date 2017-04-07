@@ -119,7 +119,12 @@ class Home extends Component {
         </Text>
           <View style={styles.cardListModule}>
             {
-              LIST_MODULES.map(module => <ModuleButton key={module.index} name={module.name} />)
+              LIST_MODULES.map(module => 
+                <ModuleButton 
+                  key={module.index} 
+                  name={module.name} 
+                />
+              )
             }
           </View>
           <Text style={styles.irappFooter}>

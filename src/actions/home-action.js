@@ -22,48 +22,48 @@ export const FETCH_PERFORMANCE = 'FETCH_PERFORMANCE';
  * @param {*} apiName 
  * @param {*} instrumentIds 
  */
-export function getCompareData(apiName, instrumentIds) {
-  const request = new Promise(resolve => {
-    http.get(servicesUrl)
-      .timeout(10000)
-      .retry(3)
-      .subscribe(
-      res => {
-        data = res.json();
-        resolve(data);
-      },
-      error => {
-        console.log(error);
-      }
-      );
-  });
-  return {
-    type: FETCH_COMPARE,
-    payload: request
-  }
-}
-/**
- * Fetch performance data from server using http
- * @param {*} apiName 
- * @param {*} instrumentIds 
- */
-export function getPerformanceData(apiName, instrumentIds) {
-  const request = new Promise(resolve => {
-    http.get(servicesUrl)
-      .timeout(10000)
-      .retry(3)
-      .subscribe(
-      res => {
-        data = res.json();
-        resolve(data);
-      },
-      error => {
-        console.log(error);
-      }
-      );
-  });
-  return {
-    type: FETCH_PERFORMANCE,
-    payload: request
-  }
+// export function getCompareData(apiName, instrumentIds) {
+//   const request = new Promise(resolve => {
+//     http.get(servicesUrl)
+//       .timeout(10000)
+//       .retry(3)
+//       .subscribe(
+//       res => {
+//         data = res.json();
+//         resolve(data);
+//       },
+//       error => {
+//         console.log(error);
+//       }
+//       );
+//   });
+//   return {
+//     type: FETCH_COMPARE,
+//     payload: request
+//   }
+// }
+// /**
+//  * Fetch performance data from server using http
+//  * @param {*} apiName 
+//  * @param {*} instrumentIds 
+//  */
+// export function getPerformanceData(apiName, instrumentIds) {
+//   const request = new Promise(resolve => {
+//     http.get(servicesUrl)
+//       .timeout(10000)
+//       .retry(3)
+//       .subscribe(
+//       res => {
+//         data = res.json();
+//         resolve(data);
+//       },
+//       error => {
+//         console.log(error);
+//       }
+//       );
+//   });
+//   return {
+//     type: FETCH_PERFORMANCE,
+//     payload: request
+//   }
 }

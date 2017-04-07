@@ -136,11 +136,12 @@ const LIST_MODULES = [
   {
     name: "Key Financials ",
     index: 5
-  }, {
+  }, 
+  {
     name: "Press Realeases",
     index: 6
-  }
-  , {
+  }, 
+  {
     name: "Financial Calendar",
     index: 7
   }
