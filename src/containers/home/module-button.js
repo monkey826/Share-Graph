@@ -19,31 +19,17 @@ const styles = StyleSheet.create({
     color: '#0B6AFF',
   }
 })
-class ModuleButton extends React.Component {
-  constructor(props){
-    super(props);
-    this._openModule = this._openModule.bind(this);
-  }
-  _openModule(){
-    console.log(this.props)
-    // this.props.navigation.push({
-    //   component : ShareGraph
-    // })
-  }
-  render() {
-    return (
-      <TouchableOpacity
-        style={styles.moduleButton}
-        onPress={this._openModule}
-      >
-        <Text style={styles.btnModuleText}>
-          {this.props.name}
-        </Text>
-      </TouchableOpacity>
-    )
-  }
+const ModuleButton = ({name,onModuleClick}) => {
+  return (
+    <TouchableOpacity
+      style={styles.moduleButton}
+      onPress={onModuleClick}
+    >
+      <Text style={styles.btnModuleText}>
+        {name}
+      </Text>
+    </TouchableOpacity>
+  )
 }
-
-
 
 export default ModuleButton;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ListView, PanResponder, TouchableOpacity, Dimensions } from 'react-native';
-// import { connect } from 'react-redux'
+import { connect } from 'react-redux'
+import { toggleMenu } from '../../actions';
 import ModuleButton from './module-button';
 import Menu from '../menu';
 
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
 
 
 })
-const LIST_MODULES = [
+const IR_MODULES = [
   {
     name: "Share Graph",
     index: 1
@@ -64,65 +65,46 @@ class Home extends Component {
     console.log(this.props);
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
-      isMenuOpened:  this.props.isMenuOpened,
-      dataSource: ds.cloneWithRows(LIST_MODULES),
+      dataSource: ds.cloneWithRows(IR_MODULES),
     };
     this._panResponder = {};
   }
 
-  componentWillMount() {
-    console.log(this.props);
-    this._panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: this._handleStartShouldSetPanResponder,
-      onMoveShouldSetPanResponder: this._handleMoveShouldSetPanResponder,
-      onPanResponderGrant: this._handlePanResponderGrant,
-      onPanResponderMove: this._handlePanResponderMove,
-      onPanResponderRelease: this._handlePanResponderEnd,
-      onPanResponderTerminate: this._handlePanResponderEnd,
-    })
+
+  onModuleClick(event, name) {
+    event.preventDefault();
+    console.log(name)
+    alert(name)
   }
   componentOnReceiveProps() {
-    console.log(this.props)
+    // console.log(this.props)
   }
-  componentDidChange() {
-    console.log(this.props)
-  }
-  _handleStartShouldSetPanResponder(e: Object, gestureState: Object): boolean {
-    // Should we become active when the user presses down on the circle?
-    return true;
-  }
-
-  _handleMoveShouldSetPanResponder(e: Object, gestureState: Object): boolean {
-    // Should we become active when the user moves a touch over the circle?
-
-    return true;
-  }
-  _handlePanResponderGrant(e: Object, gestureState: Object) {
-    // console.log("PanResponderGrant ", gestureState)
-  }
-  _handlePanResponderMove(e: Object, gestureState: Object) {
-    console.log("PanRespondermove ", gestureState);
-  }
-  _handlePanResponderEnd(e: Object, gestureState: Object) {
-    console.log("PanResponderEnd ", gestureState);
-  }
-  openMenu() {
-    // this.props.route.onLeftButtonPress{() => alert("a")}
+  _navigate() {
+    this.props.navigator.push({
+      name: 'Home', // Matches route.name
+    })
   }
   render() {
+    // console.log(this.props)
+
     return (
-        <View style={styles.footer} {...this._panResponder.panHandlers}>
-          <View>
+
+      <View style={styles.footer} >
+        <TouchableOpacity onPress={() => this._navigate()} style={{ backgroundColor: '#0077C0' }}>
+          <Text style={{ marginTop: 20 }}>Back To View</Text>
+        </TouchableOpacity>
+        <View>
           <Text style={styles.menuNote}>
             Tap on the modules for more information. {"\n"}
             Use the menu to see all modules.
         </Text>
           <View style={styles.cardListModule}>
             {
-              LIST_MODULES.map(module => 
-                <ModuleButton 
-                  key={module.index} 
-                  name={module.name} 
+              IR_MODULES.map(module =>
+                <ModuleButton
+                  key={module.index}
+                  name={module.name}
+                  onModuleClick={event => this.onModuleClick(event, module.name)}
                 />
               )
             }
@@ -131,12 +113,19 @@ class Home extends Component {
             {appFooter}
           </Text>
         </View>
-        {this.state.isMenuOpened && <Menu />}
-        </View>
+      </View>
     )
   }
 }
-// function mapStateToProps({isMenuOpened }){
-//   return {isMenuOpened};
-// }
-export default Home;
+const mapStateToProps = ({ isMenuOpened }) => {
+  return { isMenuOpened };
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // onModuleClick: () => {
+    //   dispatch(toggleMenu());
+    // },
+  }
+}
+// export default Home;
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

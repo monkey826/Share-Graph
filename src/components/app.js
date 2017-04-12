@@ -1,14 +1,17 @@
-import React from 'react';
+/*import React from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  NavigatorIOS,
+  Navigator,
   Share,
   Dimensions
 } from 'react-native';
 // import { Container, Tab, Tabs, Header } from 'native-base';
 import Home from '../containers/home/home';
+import Menu from '../containers/menu';
+import { connect } from 'react-redux';
+import { toggleMenu } from '../actions';
 
 const styles = StyleSheet.create({
   openLeftMenu: {
@@ -16,31 +19,22 @@ const styles = StyleSheet.create({
       { translateX: Dimensions.get('window').width * 0.7 },
       { scale: 0.7 },
     ],
-
-
   },
 })
 class App extends React.Component {
-  // _handleNavigationRequest() {
-  //   this.refs.nav.push({
-  //     component: Menu,
-  //     title: 'Genius',
-  //     passProps: { myProp: 'genius' },
-  //   });
-  // }
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    console.log(props);
     this.state = ({
       isMenuOpened: false
     })
   }
   _controlLeftMenu(event) {
-    // alert("Open left menu");
     event.preventDefault();
     this.setState(prevState => ({
-      isMenuOpened: !prevState.isMenuOpened 
+      isMenuOpened: !prevState.isMenuOpened
     }));
-    // this.props.handleMenu(this.state.isMenuOpened);
+    this.props.dispatch(toggleMenu(!this.state.isMenuOpened));
   }
   _share() {
     Share.share({
@@ -57,28 +51,49 @@ class App extends React.Component {
       .then(this._showResult)
       .catch((error) => this.setState({ result: 'error: ' + error.message }));
   }
-  openHome(){
-    // this.state.isMenuOpened = false
+
+  renderScene(route, navigator) {
+    if (route.name == 'Main') {
+      return <Main navigator={navigator} />
+    }
+    if (route.name == 'Home') {
+      return <Home navigator={navigator} />
+    }
+  }
+  configureScene(route, routeStack) {
+    return Navigator.SceneConfigs.PushFromRight
   }
   render() {
     return (
-      <NavigatorIOS
+      <Navigator
+        configureScene={this.configureScene}
+        style={{ flex: 1 }}
+        initialRoute={{ name: 'Home', title: 'Awesome Scene', index: 0 }}
+        renderScene={this.renderScene}
+      />
+    );
+  }
+  /*render() {
+    if (this.state.isMenuOpened) return (<Menu /> )
+    else return (
+      <Navigator
         ref='nav'
         initialRoute={{
           component: Home,
           title: 'Uponor',
-          passProps: { nav: this.refs.nav, isMenuOpened: this.state.isMenuOpened },
           leftButtonTitle: 'Menu',
           onLeftButtonPress: (event) => this._controlLeftMenu(event),
           rightButtonTitle: 'Share',
           onRightButtonPress: () => this._share(),
         }}
-        onClick = {() => this.openHome()}
+        renderScene={(route, navigator) =>
+          <Home />
+        }
         style={[{ flex: 1 }, this.state.isMenuOpened && styles.openLeftMenu]}
-        barTintColor='#ffffcc'
+        barTintColor="#ffffcc"
       />
-    );
-  }
+    )
+  }*/
 }
 
-export default App;
+export default connect()(App);*/
