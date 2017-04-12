@@ -73,7 +73,8 @@ class Home extends Component {
 
 
   onModuleClick(event, name) {
-    event.preventDefault();
+    toggleMenu(true);
+    //event.preventDefault();
     // console.log(name)
     // alert(name)
     // bindA
@@ -82,10 +83,6 @@ class Home extends Component {
     this.props.navigator.push({
       name: 'Home', // Matches route.name
     })
-  }
-
-  getState(){
-    this.props.isMenuOpened = true;
   }
 
   render() {
@@ -128,7 +125,7 @@ const mapStateToProps = ({ isMenuOpened }) => {
 }
 const mapDispatchToProps = (dispatch) => {
   bindActionCreators({
-    changedState: getState
+    changedState: toggleMenu
   }, dispatch)
 }
 
