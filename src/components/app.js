@@ -3,44 +3,38 @@ import {
   StyleSheet,
   Text,
   View,
-  Navigator,
+  NavigatorIOS,
   Share,
-  Dimensions,
-  TouchableOpacity
+  Dimensions
 } from 'react-native';
 // import { Container, Tab, Tabs, Header } from 'native-base';
 import Home from '../containers/home/home';
 import Menu from '../containers/menu';
-import {connect} from 'react-redux';
-import {toggleMenu} from '../actions';
+import { connect } from 'react-redux';
+import { toggleMenu } from '../actions';
 
 const styles = StyleSheet.create({
   openLeftMenu: {
     transform: [
-      {
-        translateX: Dimensions
-          .get('window')
-          .width * 0.7
-      }, {
-        scale: 0.7
-      }
-    ]
-  }
+      { translateX: Dimensions.get('window').width * 0.7 },
+      { scale: 0.7 },
+    ],
+  },
 })
 class App extends React.Component {
   constructor(props) {
     super(props);
     console.log(props);
-    this.state = ({isMenuOpened: false})
+    this.state = ({
+      isMenuOpened: false
+    })
   }
   _controlLeftMenu(event) {
     event.preventDefault();
     this.setState(prevState => ({
       isMenuOpened: !prevState.isMenuOpened
     }));
-    this
-      .props
-      .dispatch(toggleMenu(!this.state.isMenuOpened));
+    this.props.dispatch(toggleMenu(!this.state.isMenuOpened));
   }
   _share() {
     Share.share({
@@ -48,52 +42,35 @@ class App extends React.Component {
       url: 'http://facebook.github.io/react-native/',
       title: 'React Native'
     }, {
-      dialogTitle: 'Share React Native website',
-      excludedActivityTypes: [
-        // 'com.apple.UIKit.activity.PostToTwitter'
-      ],
+        dialogTitle: 'Share React Native website',
+        excludedActivityTypes: [
+          // 'com.apple.UIKit.activity.PostToTwitter'
+        ],
         tintColor: 'green'
       })
       .then(this._showResult)
-      .catch((error) => this.setState({
-        result: 'error: ' + error.message
-      }));
+      .catch((error) => this.setState({ result: 'error: ' + error.message }));
   }
 
-  renderScene(route, navigator) {
-    if (route.name == 'Main') {
-      return <Main navigator={navigator}/>
-    }
-    if (route.name == 'Home') {
-      return (
-        <View>
-          <TouchableOpacity
-            onPress={() => this._navigate()}
-            style={{ backgroundColor: '#0077C0' }}>
-            <Text style={{
-              marginTop: 20
-            }}>Menu</Text>
-          </TouchableOpacity>
-          <Home navigator={navigator}/>
-        </View>
-
-      )
-    }
-  }
-  configureScene(route, routeStack) {
-    return Navigator.SceneConfigs.PushFromRight
-  }
+  
   render() {
     return (
-      <Navigator
-        configureScene={this.configureScene}
-        style={{ flex: 1 }}
+      <NavigatorIOS
+        ref='nav'
         initialRoute={{
-        name: 'Home',
-        title: 'Awesome Scene',
-        index: 0
-      }}
-      renderScene={this.renderScene}/>);
+          component: Home,
+          title: 'Uponor',
+          passProps: { nav: this.refs.nav, isMenuOpened: this.state.isMenuOpened },
+          leftButtonTitle: 'Menu',
+          onLeftButtonPress: (event) => this._controlLeftMenu(event),
+          rightButtonTitle: 'Share',
+          onRightButtonPress: () => this._share(),
+        }}
+        onClick = {() => this.openHome()}
+        style={[{ flex: 1 }, this.state.isMenuOpened && styles.openLeftMenu]}
+        barTintColor='#ffffcc'
+      />
+    );
   }
   /*render() {
     if (this.state.isMenuOpened) return (<Menu /> )

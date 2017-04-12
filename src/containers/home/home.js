@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Text, View, StyleSheet, ListView, PanResponder, TouchableOpacity, Dimensions } from 'react-native';
-import { connect } from 'react-redux'
+import { connect, ActionCreator } from 'react-redux'
 import { toggleMenu } from '../../actions';
 import ModuleButton from './module-button';
 import Menu from '../menu';
+import { bindActionCreators } from 'redux';
 
 // const TYPE_MODULES = [{}]
 
@@ -73,20 +74,24 @@ class Home extends Component {
 
   onModuleClick(event, name) {
     event.preventDefault();
-    console.log(name)
-    alert(name)
-  }
-  componentOnReceiveProps() {
-    // console.log(this.props)
+    // console.log(name)
+    // alert(name)
+    // bindA
   }
   _navigate() {
     this.props.navigator.push({
       name: 'Home', // Matches route.name
     })
   }
-  render() {
-    // console.log(this.props)
 
+  getState(){
+    this.props.isMenuOpened = true;
+  }
+
+  render() {
+    console.log(this.props)
+    // if (this.props.isMenuOpened) return <Menu />
+    // else 
     return (
 
       <View style={styles.footer} >
@@ -117,15 +122,19 @@ class Home extends Component {
     )
   }
 }
+
 const mapStateToProps = ({ isMenuOpened }) => {
   return { isMenuOpened };
 }
 const mapDispatchToProps = (dispatch) => {
-  return {
-    // onModuleClick: () => {
-    //   dispatch(toggleMenu());
-    // },
-  }
+  bindActionCreators({
+    changedState: getState
+  }, dispatch)
 }
+
+Home.propTypes = {
+  changedState: PropTypes.func
+}
+
 // export default Home;
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
