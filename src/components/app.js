@@ -1,40 +1,46 @@
-/*import React from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
   View,
   Navigator,
   Share,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
 // import { Container, Tab, Tabs, Header } from 'native-base';
 import Home from '../containers/home/home';
 import Menu from '../containers/menu';
-import { connect } from 'react-redux';
-import { toggleMenu } from '../actions';
+import {connect} from 'react-redux';
+import {toggleMenu} from '../actions';
 
 const styles = StyleSheet.create({
   openLeftMenu: {
     transform: [
-      { translateX: Dimensions.get('window').width * 0.7 },
-      { scale: 0.7 },
-    ],
-  },
+      {
+        translateX: Dimensions
+          .get('window')
+          .width * 0.7
+      }, {
+        scale: 0.7
+      }
+    ]
+  }
 })
 class App extends React.Component {
   constructor(props) {
     super(props);
     console.log(props);
-    this.state = ({
-      isMenuOpened: false
-    })
+    this.state = ({isMenuOpened: false})
   }
   _controlLeftMenu(event) {
     event.preventDefault();
     this.setState(prevState => ({
       isMenuOpened: !prevState.isMenuOpened
     }));
-    this.props.dispatch(toggleMenu(!this.state.isMenuOpened));
+    this
+      .props
+      .dispatch(toggleMenu(!this.state.isMenuOpened));
   }
   _share() {
     Share.share({
@@ -42,22 +48,36 @@ class App extends React.Component {
       url: 'http://facebook.github.io/react-native/',
       title: 'React Native'
     }, {
-        dialogTitle: 'Share React Native website',
-        excludedActivityTypes: [
-          // 'com.apple.UIKit.activity.PostToTwitter'
-        ],
+      dialogTitle: 'Share React Native website',
+      excludedActivityTypes: [
+        // 'com.apple.UIKit.activity.PostToTwitter'
+      ],
         tintColor: 'green'
       })
       .then(this._showResult)
-      .catch((error) => this.setState({ result: 'error: ' + error.message }));
+      .catch((error) => this.setState({
+        result: 'error: ' + error.message
+      }));
   }
 
   renderScene(route, navigator) {
     if (route.name == 'Main') {
-      return <Main navigator={navigator} />
+      return <Main navigator={navigator}/>
     }
     if (route.name == 'Home') {
-      return <Home navigator={navigator} />
+      return (
+        <View>
+          <TouchableOpacity
+            onPress={() => this._navigate()}
+            style={{ backgroundColor: '#0077C0' }}>
+            <Text style={{
+              marginTop: 20
+            }}>Menu</Text>
+          </TouchableOpacity>
+          <Home navigator={navigator}/>
+        </View>
+
+      )
     }
   }
   configureScene(route, routeStack) {
@@ -68,10 +88,12 @@ class App extends React.Component {
       <Navigator
         configureScene={this.configureScene}
         style={{ flex: 1 }}
-        initialRoute={{ name: 'Home', title: 'Awesome Scene', index: 0 }}
-        renderScene={this.renderScene}
-      />
-    );
+        initialRoute={{
+        name: 'Home',
+        title: 'Awesome Scene',
+        index: 0
+      }}
+      renderScene={this.renderScene}/>);
   }
   /*render() {
     if (this.state.isMenuOpened) return (<Menu /> )
@@ -96,4 +118,4 @@ class App extends React.Component {
   }*/
 }
 
-export default connect()(App);*/
+export default connect()(App);

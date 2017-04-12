@@ -91,7 +91,7 @@ class Home extends Component {
 
       <View style={styles.footer} >
         <TouchableOpacity onPress={() => this._navigate()} style={{ backgroundColor: '#0077C0' }}>
-          <Text style={{ marginTop: 20 }}>Back To View</Text>
+          <Text style={{ marginTop: 20 }}>Menu</Text>
         </TouchableOpacity>
         <View>
           <Text style={styles.menuNote}>
