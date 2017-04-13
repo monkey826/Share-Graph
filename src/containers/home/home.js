@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Text, View, StyleSheet, ListView, PanResponder, TouchableOpacity, Dimensions } from 'react-native';
-import { connect, ActionCreator } from 'react-redux'
+import { connect } from 'react-redux'
 import { toggleMenu } from '../../actions';
 import ModuleButton from './module-button';
 import Menu from '../menu';
@@ -59,7 +59,7 @@ const IR_MODULES = [
 ]
 
 const appFooter = "Footer";
-
+const WINDOW_WIDTH = Dimensions.get("window").width;
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -68,12 +68,62 @@ class Home extends Component {
     this.state = {
       dataSource: ds.cloneWithRows(IR_MODULES),
     };
-    this._panResponder = {};
+    this._panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: this._handleStartShouldSetPanResponder,
+      onMoveShouldSetPanResponder: this._handleMoveShouldSetPanResponder,
+      onPanResponderGrant: this._handlePanResponderGrant,
+      onPanResponderMove: (e,gestureState) => this._handlePanResponderMove(e,gestureState),
+      onPanResponderRelease: (e,gestureState) => this._handlePanResponderEnd(e,gestureState),
+      onPanResponderTerminate: this._handlePanResponderEnd,
+    })
+    this._handlePanResponderEnd = this._handlePanResponderEnd.bind(this);
+    this._handlePanResponderMove = this._handlePanResponderMove.bind(this);
+  }
+  // componentWillMount() {
+  //   console.log(this.props);
+    
+  // }
+  _handleStartShouldSetPanResponder(e: Object, gestureState: Object): boolean {
+    // Should we become active when the user presses down on the circle?
+    return true;
   }
 
+  _handleMoveShouldSetPanResponder(e: Object, gestureState: Object): boolean {
+    // Should we become active when the user moves a touch over the circle?
+
+    return true;
+  }
+  // _handlePanResponderGrant(e: Object, gestureState: Object) {
+  //   // console.log("PanResponderGrant ", gestureState)
+  // }
+  _handlePanResponderMove(e: Object, gestureState: Object) {
+    console.log("PanRespondermove ", gestureState);
+
+    let x0 = gestureState.x0;
+    let moveX = gestureState.moveX;
+    let y0 = gestureState.y0;
+    let moveY = gestureState.moveY;
+    if (!this.props.isMenuOpened){
+      // Open left menu
+      if (gestureState.x0 < 100 && moveX-x0 > 30) 
+        this.props.dispatch(toggleMenu(this.props.isMenuOpened));
+    }else {
+      // close left menu
+      if (x0 < WINDOW_WIDTH*0.75 && x0 - moveX > 30 && moveY - y0 <= 30) 
+        this.props.dispatch(toggleMenu(this.props.isMenuOpened));
+    }
+  }
+  _handlePanResponderEnd(e: Object, gestureState: Object) {
+    console.log("PanResponderEnd ", gestureState);
+      
+  }
 
   onModuleClick(event, name) {
-    toggleMenu(true);
+    // this.props.changedState(true);
+    setTimeout(()=>{
+      console.log("return");
+      console.log(this.props.isMenuOpened);
+    },1000);
     //event.preventDefault();
     // console.log(name)
     // alert(name)
@@ -84,17 +134,22 @@ class Home extends Component {
       name: 'Home', // Matches route.name
     })
   }
-
+   _controlLeftMenu(event) {
+    event.preventDefault();
+    this.props.dispatch(toggleMenu(this.props.isMenuOpened));
+  }
   render() {
     console.log(this.props)
-    // if (this.props.isMenuOpened) return <Menu />
-    // else 
     return (
-
-      <View style={styles.footer} >
-        <TouchableOpacity onPress={() => this._navigate()} style={{ backgroundColor: '#0077C0' }}>
-          <Text style={{ marginTop: 20 }}>Menu</Text>
-        </TouchableOpacity>
+      <View style={styles.footer} {...this._panResponder.panHandlers}>
+        {this.props.isMenuOpened && 
+          <TouchableOpacity 
+            onPress={(event) =>this._controlLeftMenu(event)} 
+            style={{backgroundColor: '#ffffcc', }} 
+          >
+            <Text style={{ marginTop: 20 }}>Menu</Text>
+          </TouchableOpacity>
+        }
         <View>
           <Text style={styles.menuNote}>
             Tap on the modules for more information. {"\n"}
@@ -105,12 +160,35 @@ class Home extends Component {
               IR_MODULES.map(module =>
                 <ModuleButton
                   key={module.index}
+                  index={module.index}
                   name={module.name}
                   onModuleClick={event => this.onModuleClick(event, module.name)}
                 />
               )
             }
           </View>
+          {/*<View style={styles.cardListModule}>
+            {
+              IR_MODULES.map(module =>
+                <ModuleButton
+                  key={module.index}
+                  name={module.name}
+                  onModuleClick={event => this.onModuleClick(event, module.name)}
+                />
+              )
+            }
+          </View>
+          <View style={styles.cardListModule}>
+            {
+              IR_MODULES.map(module =>
+                <ModuleButton
+                  key={module.index}
+                  name={module.name}
+                  onModuleClick={event => this.onModuleClick(event, module.name)}
+                />
+              )
+            }
+          </View>*/}
           <Text style={styles.irappFooter}>
             {appFooter}
           </Text>
@@ -120,18 +198,19 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = ({ isMenuOpened }) => {
-  return { isMenuOpened };
+const mapStateToProps = (state) => {
+  return { isMenuOpened: state.home.isMenuOpened };
 }
-const mapDispatchToProps = (dispatch) => {
-  bindActionCreators({
-    changedState: toggleMenu
-  }, dispatch)
-}
+
+// const mapDispatchToProps = dispatch => (
+//   bindActionCreators({
+//     changedState: toggleMenu
+//   }, dispatch)
+// );
 
 Home.propTypes = {
   changedState: PropTypes.func
 }
 
 // export default Home;
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps)(Home);

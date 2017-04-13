@@ -1,13 +1,12 @@
 
-const home = (state = [], action) => {
+const home = (state = {isMenuOpened: false}, action) => {
   switch (action.type) {
     case 'TOGGLE_MENU':
-      if (state.id !== action.id) {
-        return state;
-      }
+      console.log("State", state);
+      console.log("Action", action);
       return {
         ...state,
-        isMenuOpened: !state.isMenuOpened,
+        isMenuOpened: !action.isMenuOpened,
       };
     default:
       return state;

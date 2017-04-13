@@ -3,9 +3,10 @@ import {
   StyleSheet,
   Text,
   View,
-  NavigatorIOS,
+  Navigator,
   Share,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
 // import { Container, Tab, Tabs, Header } from 'native-base';
 import Home from '../containers/home/home';
@@ -14,9 +15,18 @@ import { connect } from 'react-redux';
 import { toggleMenu } from '../actions';
 
 const styles = StyleSheet.create({
-  openLeftMenu: {
+  leftMenu: {
+    position: 'absolute',
+    // left: Dimensions.get('window').width * 0.45,
+    // right: 0,
+    left: Dimensions.get('window').width * 0.45,
+    // right: 0,
+    // top: 0 ,
+    // bottom: 0 ,
+    // flex: 0.3,
+    // top: Dimensions.get('window').height * 0.15,
+    // bottom: Dimensions.get('window').height * 0.15,
     transform: [
-      { translateX: Dimensions.get('window').width * 0.7 },
       { scale: 0.7 },
     ],
   },
@@ -29,13 +39,7 @@ class App extends React.Component {
       isMenuOpened: false
     })
   }
-  _controlLeftMenu(event) {
-    event.preventDefault();
-    this.setState(prevState => ({
-      isMenuOpened: !prevState.isMenuOpened
-    }));
-    this.props.dispatch(toggleMenu(!this.state.isMenuOpened));
-  }
+  
   _share() {
     Share.share({
       message: 'A framework for building native apps using React',
@@ -53,7 +57,7 @@ class App extends React.Component {
   }
 
   
-  render() {
+  /*render() {
     return (
       <NavigatorIOS
         ref='nav'
@@ -71,28 +75,72 @@ class App extends React.Component {
         barTintColor='#ffffcc'
       />
     );
-  }
-  /*render() {
-    if (this.state.isMenuOpened) return (<Menu /> )
+  }*/
+  render() {
+    let isMenuOpened = this.props.isMenuOpened;
+    if (isMenuOpened) return (
+      <View style = {{flex: 1, position: 'relative'}}>
+          <View style = {{ flex: 1}}> 
+            <Menu  />
+          </View>
+          <TouchableOpacity 
+            onPress={ () => this.props.dispatch(toggleMenu(isMenuOpened))} 
+            activeOpacity = {0.7}
+            style = {styles.leftMenu}
+          >
+            <Home />
+          </TouchableOpacity>
+      </View>
+    )
     else return (
       <Navigator
         ref='nav'
         initialRoute={{
-          component: Home,
-          title: 'Uponor',
-          leftButtonTitle: 'Menu',
-          onLeftButtonPress: (event) => this._controlLeftMenu(event),
-          rightButtonTitle: 'Share',
-          onRightButtonPress: () => this._share(),
         }}
-        renderScene={(route, navigator) =>
-          <Home />
+        renderScene={(route, navigator) => (
+            <Home />
+        )}
+        style={[{ flex: 1 }, isMenuOpened && styles.openLeftMenu]}
+        navigationBar={
+          <Navigator.NavigationBar
+            routeMapper={{
+              LeftButton: (route, navigator, index, navState) =>
+                { return (<LeftButton {...this.props}/>); },
+              RightButton: (route, navigator, index, navState) =>
+                { return (<Text>Done</Text>); },
+              Title: (route, navigator, index, navState) =>
+                { return (<Text>Hello, I'm Monkey</Text>); },
+            }}
+            style={{backgroundColor: 'gray'}}
+          />
         }
-        style={[{ flex: 1 }, this.state.isMenuOpened && styles.openLeftMenu]}
-        barTintColor="#ffffcc"
       />
     )
-  }*/
+  }
+}
+const LeftButton = (props) => {
+  function _controlLeftMenu(event) {
+    event.preventDefault();
+    props.dispatch(toggleMenu(props.isMenuOpened));
+  }
+  return (
+   <TouchableOpacity 
+      onPress={(event) => _controlLeftMenu(event)} 
+      style={{backgroundColor: '#ffffcc', }} 
+    >
+      <Text style={{ marginTop: 20 }}>Menu</Text>
+    </TouchableOpacity>
+  )
 }
 
-export default connect()(App);
+const mapStateToProps = ({home}) => {
+  return {isMenuOpened : home.isMenuOpened};
+}
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     onToggleMenu: () => {
+//       dispatch(toggleMenu(props.isMenuOpened))
+//     }
+//   }
+// }
+export default connect(mapStateToProps)(App);

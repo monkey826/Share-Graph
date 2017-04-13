@@ -1,10 +1,10 @@
 let nextTodoId = 0;
 export const toggleMenu = (isMenuOpened) => {
-  console.log(isMenuOpened)
+  // console.log(isMenuOpened)
   return {
     type: 'TOGGLE_MENU',
     id: (nextTodoId++).toString(),
-    isMenuOpened,
+    isMenuOpened
   };
 };
 
